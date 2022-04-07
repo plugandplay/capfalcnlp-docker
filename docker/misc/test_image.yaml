@@ -1,0 +1,42 @@
+schemaVersion: "2.0.0"
+
+metadataTest:
+  env:
+#    - key: VARNAME
+#      value: "varvalue"
+
+#fileExistenceTests:
+#  - name: "entrypoint"
+#    path: "/entrypoint"
+#    shouldExist: true
+#    permissions: "-rwxr-xr-x"
+
+#fileContentTests:
+#  - name: "entrypoint"
+#    path: "/entrypoint"
+#    expectedContents: ["ssh -qCt sas .*", ".*sas .*", "exit \\${EXIT_CODE}"]
+
+commandTests:
+
+  - name: "Whoami"
+    command: "whoami"
+    expectedOutput: ["codatalab"]
+
+  - name: "Workdir"
+    command: "pwd"
+    expectedOutput: ["/home/codatalab"]
+
+  - name: "Python version"
+    command: "python"
+    args: ["-v"]
+    exitCode: 0
+    expectedOutput: ["Python 3.7"]
+
+#memrory min 256M
+#max esc time 120s
+#max size / fileuploads = 20M
+
+  - name: "apt-get"
+    command: "apt-get"
+    args: ["--help"]
+    exitCode: 0
