@@ -1,32 +1,48 @@
-FROM python:3.7-bullseye
+FROM continuumio/miniconda3
 
 RUN apt-get update -qq \
     && apt-get install -yqq --no-install-recommends \
         git \
         openssh-server \
+        net-tools iputils-ping nano acl \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && service ssh start \
-    && useradd -m codatalab \
-    && echo 'codatalab:test' | chpasswd 
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && conda create -n capfalcnlp python=3.7 -y
 
 COPY resources/ssh_config /etc/ssh/ssh_config
 COPY resources/sshd_config /etc/ssh/sshd_config
-COPY resources/entrypoint /entrypoint
 
-#USER codatalab
+RUN useradd -ms /bin/bash codatalab \
+    && echo codatalab:test | chpasswd \
+    && service ssh start \
+    && ssh-keygen -A \
+    && setfacl -Rm u:codatalab:r-x /etc/ssh \
+    && setfacl -m u:codatalab:r-x /etc/passwd \
+    && setfacl -m u:codatalab:r-x /etc/shadow
+
+USER codatalab
 WORKDIR /home/codatalab
 
+# FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
+# TMP fix processing.py waiting for the issue to be solved by this MR : 
 RUN git clone --quiet --depth 1 https://github.com/louismartin/capfalcnlp.git \
     && rm -rf capfalcnlp/.git* \
-    && cd capfalcnlp \
+    && sed -i '50i\    nltk.download("punkt")' ./capfalcnlp/capfalcnlp/processing.py \
+    && conda init bash \
+    && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
+    && echo 'conda activate capfalcnlp' >> ~/.bashrc \
+    && echo 'cd capfalcnlp' >> ~/.bashrc \
+    && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
     && python -m spacy download fr_core_news_md \
     && chown -R codatalab /home/codatalab
 
-EXPOSE 22
+RUN . ~/.bashrc \ 
+    && python cli.py --input-file example_text.txt
 
+EXPOSE 22
+COPY resources/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
- 
 CMD tail -f /dev/null
