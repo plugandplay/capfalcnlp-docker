@@ -26,11 +26,7 @@ commandTests:
     command: "pwd"
     expectedOutput: ["/home/codatalab"]
 
-  - name: "Python version"
-    command: "python"
-    args: ["-v"]
-    exitCode: 0
-    expectedOutput: ["Python 3.7"]
+# TODO Test conda and then python version
 
 #memrory min 256M
 #max esc time 120s
