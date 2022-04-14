@@ -26,9 +26,8 @@ WORKDIR /home/codatalab
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
 # TMP fix processing.py waiting for the issue to be solved by this MR : 
-RUN git clone --quiet --depth 1 https://github.com/louismartin/capfalcnlp.git \
+RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
     && rm -rf capfalcnlp/.git* \
-    && sed -i '50i\    nltk.download("punkt")' ./capfalcnlp/capfalcnlp/processing.py \
     && conda init bash \
     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
     && echo 'conda activate capfalcnlp' >> ~/.bashrc \
