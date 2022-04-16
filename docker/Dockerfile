@@ -8,40 +8,49 @@ RUN apt-get update -qq \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/python3 /usr/bin/python \
-    && conda create -n capfalcnlp python=3.7 -y
+    && conda create -n capfalcnlp python=3.7 -y \
+    \
+    && useradd --create-home --shell /bin/bash codatalab --no-log-init \
+    && mkdir -p /home/codatalab/.ssh \
+    && chmod 0700 /home/codatalab/.ssh \
+    && chown -R codatalab:codatalab /home/codatalab \
+    && echo 'codatalab:test' | chpasswd \
+    \
+    && mkdir /opt/ssh \
+    && /usr/bin/ssh-keygen -A \
+    && cp /etc/ssh/ssh_host_* /opt/ssh/ \
+    && cp /etc/ssh/sshd_config /opt/ssh/ \
+    && chmod 700 /opt/ssh \
+    && chmod 600 /opt/ssh/* \
+    && chmod 644 /opt/ssh/sshd_config \
+    && chown -R codatalab:codatalab /opt/ssh \
+    && mkdir /run/sshd
 
-COPY resources/ssh_config /etc/ssh/ssh_config
-COPY resources/sshd_config /etc/ssh/sshd_config
-
-RUN useradd -ms /bin/bash codatalab \
-    && echo codatalab:test | chpasswd \
-    && service ssh start \
-    && ssh-keygen -A \
-    && setfacl -Rm u:codatalab:r-x /etc/ssh \
-    && setfacl -m u:codatalab:r-x /etc/passwd \
-    && setfacl -m u:codatalab:r-x /etc/shadow
+COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
+COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
 
 USER codatalab
 WORKDIR /home/codatalab
 
-# FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
-# TMP fix processing.py waiting for the issue to be solved by this MR : 
-RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
-    && rm -rf capfalcnlp/.git* \
-    && conda init bash \
-    && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
-    && echo 'conda activate capfalcnlp' >> ~/.bashrc \
-    && echo 'cd capfalcnlp' >> ~/.bashrc \
-    && . ~/.bashrc \
-    && pip install -r requirements.txt \
-    && pip install -e . \
-    && python -m spacy download fr_core_news_md \
-    && chown -R codatalab /home/codatalab
 
-RUN . ~/.bashrc \ 
-    && python cli.py --input-file example_text.txt
+# # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
+# # TMP fix processing.py waiting for the issue to be solved by this MR : 
+# RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
+#     && rm -rf capfalcnlp/.git* \
+#     && conda init bash \
+#     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
+#     && echo 'conda activate capfalcnlp' >> ~/.bashrc \
+#     && echo 'cd capfalcnlp' >> ~/.bashrc \
+#     && . ~/.bashrc \
+#     && pip install -r requirements.txt \
+#     && pip install -e . \
+#     && python -m spacy download fr_core_news_md \
+#     && chown -R codatalab /home/codatalab
 
-EXPOSE 22
+# RUN . ~/.bashrc \ 
+#     && python cli.py --input-file example_text.txt
+
+EXPOSE 2222
 COPY resources/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD tail -f /dev/null

@@ -1,7 +1,13 @@
 ChallengeResponseAuthentication no
-UsePAM no
+UsePAM yes
 PrintMotd no
 X11Forwarding no
 AllowTcpForwarding no
 AllowAgentForwarding no
 PermitTunnel no
+
+Port 2222
+
+HostKey /opt/ssh/ssh_host_rsa_key
+HostKey /opt/ssh/ssh_host_ecdsa_key
+HostKey /opt/ssh/ssh_host_ed25519_key
