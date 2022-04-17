@@ -10,10 +10,10 @@ RUN apt-get update -qq \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && conda create -n capfalcnlp python=3.7 -y \
     \
-    && useradd --create-home --shell /bin/bash codatalab --no-log-init \
-    && mkdir -p /home/codatalab/.ssh \
-    && chmod 0700 /home/codatalab/.ssh \
-    && chown -R codatalab:codatalab /home/codatalab \
+    && mkdir -p /usr/local/home/codatalab/.ssh \
+    && useradd --home /usr/local/home/codatalab --no-create-home --shell /bin/bash codatalab --no-log-init \
+    && chmod 0700 /usr/local/home/codatalab/.ssh \
+    && chown -R codatalab:codatalab /usr/local/home/codatalab \
     && echo 'codatalab:test' | chpasswd \
     \
     && mkdir /opt/ssh \
@@ -30,7 +30,7 @@ COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
 COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
 
 USER codatalab
-WORKDIR /home/codatalab
+WORKDIR /usr/local/home/codatalab
 
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
@@ -45,7 +45,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && pip install -r requirements.txt \
     && pip install -e . \
     && python -m spacy download fr_core_news_md \
-    && chown -R codatalab /home/codatalab
+    && chown -R codatalab /usr/local/home/codatalab
 
 RUN . ~/.bashrc \ 
     && python cli.py --input-file example_text.txt
