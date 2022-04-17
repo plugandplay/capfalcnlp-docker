@@ -20,7 +20,7 @@ RUN apt-get update -qq \
     && /usr/bin/ssh-keygen -A \
     && cp /etc/ssh/ssh_host_* /opt/ssh/ \
     && cp /etc/ssh/sshd_config /opt/ssh/ \
-    && sed -i 's:^HostKey /etc:HostKey /opt:' /opt/ssh/sshd_config \
+    && sed -i 's:#?HostKey /etc:HostKey /opt:' /opt/ssh/sshd_config \
     && sed -i -E 's/#?PasswordAuthentication yes/PasswordAuthentication yes/' /opt/ssh/sshd_config \
     && echo 'Port 2222' >> /opt/ssh/sshd_config \
     && echo 'LogLevel DEBUG3' >> /opt/ssh/sshd_config \
@@ -30,7 +30,7 @@ RUN apt-get update -qq \
     && chown -R codatalab:codatalab /opt/ssh \
     && mkdir /run/sshd
 
-COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
+# COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
 # COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
 
 RUN rm -rf /run/nologin
