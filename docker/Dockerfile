@@ -22,7 +22,7 @@ RUN apt-get update -qq \
     && cp /etc/ssh/sshd_config /opt/ssh/ \
     && sed -i -E 's:#?HostKey /etc:HostKey /opt:' /opt/ssh/sshd_config \
     && sed -i -E 's/#?PasswordAuthentication yes/PasswordAuthentication yes/' /opt/ssh/sshd_config \
-    && echo 'Port 2222' >> /opt/ssh/sshd_config \
+    && echo 'Port 22' >> /opt/ssh/sshd_config \
     && echo 'LogLevel DEBUG3' >> /opt/ssh/sshd_config \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
@@ -56,7 +56,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
 RUN . ~/.bashrc \ 
     && python cli.py --input-file example_text.txt
 
-EXPOSE 2222
+EXPOSE 22
 COPY resources/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD tail -f /dev/null
