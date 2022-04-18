@@ -25,7 +25,6 @@ RUN apt-get update -qq \
     && cp /etc/ssh/sshd_config /opt/ssh/ \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
-    && chmod 644 /opt/ssh/sshd_config \
     && chown -R ${user}:${user} /opt/ssh \
     && mkdir /run/sshd
 
@@ -52,8 +51,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && python -m spacy download fr_core_news_md \
     && chown -R ${user} /usr/local/home/${user}
 
-# RUN . ~/.bashrc \ 
-#     && python cli.py --input-file example_text.txt
+RUN . ~/.bashrc \ 
+    && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY resources/entrypoint /entrypoint
