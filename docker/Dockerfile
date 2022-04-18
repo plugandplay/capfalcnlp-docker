@@ -13,10 +13,10 @@ RUN apt-get update -qq \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && conda create -n capfalcnlp python=3.7 -y \
     \
-    && mkdir -p /home/${user}/.ssh \
-    && useradd --home /home/${user} --no-create-home --shell /bin/bash ${user} --no-log-init \
-    && chmod 0700 /home/${user}/.ssh \
-    && chown -R ${user}:${user} /home/${user} \
+    && mkdir -p /usr/local/home/${user}/.ssh \
+    && useradd --home /usr/local/home/${user} --no-create-home --shell /bin/bash ${user} --no-log-init \
+    && chmod 0700 /usr/local/home/${user}/.ssh \
+    && chown -R ${user}:${user} /usr/local/home/${user} \
     && echo "${user}:${password}" | chpasswd \
     \
     && mkdir /opt/ssh \
@@ -35,7 +35,7 @@ COPY --chown=${user} resources/sshd_config /opt/ssh/sshd_config
 RUN rm -rf /run/nologin
 
 USER ${user}
-WORKDIR /home/${user}
+WORKDIR /usr/local/home/${user}
 
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
@@ -50,7 +50,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && pip install -r requirements.txt \
     && pip install -e . \
     && python -m spacy download fr_core_news_md \
-    && chown -R ${user} /home/${user}
+    && chown -R ${user} /usr/local/home/${user}
 
 RUN . ~/.bashrc \ 
     && python cli.py --input-file example_text.txt
