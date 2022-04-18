@@ -52,8 +52,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && python -m spacy download fr_core_news_md \
     && chown -R ${user} /usr/local/home/${user}
 
-RUN . ~/.bashrc \ 
-    && python cli.py --input-file example_text.txt
+# RUN . ~/.bashrc \ 
+#     && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY resources/entrypoint /entrypoint
