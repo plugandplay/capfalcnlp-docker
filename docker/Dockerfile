@@ -20,10 +20,6 @@ RUN apt-get update -qq \
     && /usr/bin/ssh-keygen -A \
     && cp /etc/ssh/ssh_host_* /opt/ssh/ \
     && cp /etc/ssh/sshd_config /opt/ssh/ \
-    && sed -i -E 's:#?HostKey /etc:HostKey /opt:' /opt/ssh/sshd_config \
-    && sed -i -E 's/#?PasswordAuthentication yes/PasswordAuthentication yes/' /opt/ssh/sshd_config \
-    && echo 'Port 22' >> /opt/ssh/sshd_config \
-    && echo 'LogLevel DEBUG3' >> /opt/ssh/sshd_config \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
     && chmod 644 /opt/ssh/sshd_config \
@@ -31,7 +27,7 @@ RUN apt-get update -qq \
     && mkdir /run/sshd
 
 # COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
-# COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
+COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
 
 RUN rm -rf /run/nologin
 
@@ -41,22 +37,22 @@ WORKDIR /usr/local/home/codatalab
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
 # TMP fix processing.py waiting for the issue to be solved by this MR : 
-RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
-    && rm -rf capfalcnlp/.git* \
-    && conda init bash \
-    && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
-    && echo 'conda activate capfalcnlp' >> ~/.bashrc \
-    && echo 'cd capfalcnlp' >> ~/.bashrc \
-    && . ~/.bashrc \
-    && pip install -r requirements.txt \
-    && pip install -e . \
-    && python -m spacy download fr_core_news_md \
-    && chown -R codatalab /usr/local/home/codatalab
+# RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
+#     && rm -rf capfalcnlp/.git* \
+#     && conda init bash \
+#     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
+#     && echo 'conda activate capfalcnlp' >> ~/.bashrc \
+#     && echo 'cd capfalcnlp' >> ~/.bashrc \
+#     && . ~/.bashrc \
+#     && pip install -r requirements.txt \
+#     && pip install -e . \
+#     && python -m spacy download fr_core_news_md \
+#     && chown -R codatalab /usr/local/home/codatalab
 
-RUN . ~/.bashrc \ 
-    && python cli.py --input-file example_text.txt
+# RUN . ~/.bashrc \ 
+#     && python cli.py --input-file example_text.txt
 
-EXPOSE 22
+EXPOSE 2222
 COPY resources/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD tail -f /dev/null
