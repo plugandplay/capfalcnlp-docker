@@ -1,5 +1,8 @@
 FROM continuumio/miniconda3
 
+ARG user=unapei-capfalcnlp
+ARG password=test
+
 RUN apt-get update -qq \
     && apt-get install -yqq --no-install-recommends \
         git \
@@ -10,11 +13,11 @@ RUN apt-get update -qq \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && conda create -n capfalcnlp python=3.7 -y \
     \
-    && mkdir -p /usr/local/home/codatalab/.ssh \
-    && useradd --home /usr/local/home/codatalab --no-create-home --shell /bin/bash codatalab --no-log-init \
-    && chmod 0700 /usr/local/home/codatalab/.ssh \
-    && chown -R codatalab:codatalab /usr/local/home/codatalab \
-    && echo 'codatalab:test' | chpasswd \
+    && mkdir -p /home/${user}/.ssh \
+    && useradd --home /home/${user} --no-create-home --shell /bin/bash ${user} --no-log-init \
+    && chmod 0700 /home/${user}/.ssh \
+    && chown -R ${user}:${user} /home/${user} \
+    && echo "${user}:${password}" | chpasswd \
     \
     && mkdir /opt/ssh \
     && /usr/bin/ssh-keygen -A \
@@ -23,16 +26,16 @@ RUN apt-get update -qq \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
     && chmod 644 /opt/ssh/sshd_config \
-    && chown -R codatalab:codatalab /opt/ssh \
+    && chown -R ${user}:${user} /opt/ssh \
     && mkdir /run/sshd
 
-# COPY --chown=codatalab resources/ssh_config /opt/ssh/ssh_config
-COPY --chown=codatalab resources/sshd_config /opt/ssh/sshd_config
+# COPY --chown=${user} resources/ssh_config /opt/ssh/ssh_config
+COPY --chown=${user} resources/sshd_config /opt/ssh/sshd_config
 
 RUN rm -rf /run/nologin
 
-USER codatalab
-WORKDIR /usr/local/home/codatalab
+USER ${user}
+WORKDIR /home/${user}
 
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
@@ -47,7 +50,7 @@ WORKDIR /usr/local/home/codatalab
 #     && pip install -r requirements.txt \
 #     && pip install -e . \
 #     && python -m spacy download fr_core_news_md \
-#     && chown -R codatalab /usr/local/home/codatalab
+#     && chown -R ${user} /home/${user}
 
 # RUN . ~/.bashrc \ 
 #     && python cli.py --input-file example_text.txt
