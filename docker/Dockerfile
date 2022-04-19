@@ -32,9 +32,6 @@ RUN apt-get update -qq \
     && chown -R ${user}:${user} /opt/ssh \
     && mkdir /run/sshd
 
-# COPY --chown=${user} resources/ssh_config /opt/ssh/ssh_config
-# COPY --chown=${user} resources/sshd_config /opt/ssh/sshd_config
-
 RUN rm -rf /run/nologin
 
 USER ${user}
@@ -49,13 +46,16 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
     && echo 'conda activate capfalcnlp' >> ~/.bashrc \
     && echo 'cd capfalcnlp' >> ~/.bashrc \
+    && echo 'if [ -f ~/.bashrc ]; then' >> ~/.bash_profile \
+    && echo '  . ~/.bashrc' >> ~/.bash_profile \
+    && echo 'fi' >> ~/.bash_profile \
     && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
     && python -m spacy download fr_core_news_md
 
-# RUN . ~/.bashrc \ 
-#     && python cli.py --input-file example_text.txt
+RUN . ~/.bashrc \ 
+    && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY resources/entrypoint /entrypoint
