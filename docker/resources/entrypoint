@@ -2,7 +2,7 @@
 
 printf "\n\033[0;44m---> Starting the gunicorn server.\033[0m\n"
 
-gunicorn --chdir ~/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
+~/.local/bin/gunicorn --chdir ~/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
 
 printf "\n\033[0;44m---> Starting the SSH server.\033[0m\n"
 

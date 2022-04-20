@@ -9,7 +9,6 @@ RUN apt-get update -qq \
         git \
         openssh-server \
         net-tools iputils-ping nano acl \
-        gunicorn \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/python3 /usr/bin/python \
@@ -53,6 +52,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
+    && pip install gunicorn \
     && python -m nltk.downloader punkt \
     && python -m spacy download en_core_web_md \
     && python -m spacy download fr_core_news_md
