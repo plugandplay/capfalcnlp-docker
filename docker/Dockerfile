@@ -53,7 +53,6 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
-    && pip install flask \
     && python -m nltk.downloader punkt \
     && python -m spacy download en_core_web_md \
     && python -m spacy download fr_core_news_md
