@@ -64,8 +64,8 @@ ENV FLASK_ENV=production
 RUN . ~/.bashrc \
     && gunicorn --chdir ${homedir}/${user}/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
 
-RUN . ~/.bashrc \
-    && python cli.py --input-file example_text.txt
+# RUN . ~/.bashrc \
+#     && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY resources/entrypoint /entrypoint
