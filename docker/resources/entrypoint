@@ -1,5 +1,9 @@
 #!/bin/bash
 
+printf "\n\033[0;44m---> Starting the gunicorn server.\033[0m\n"
+
+gunicorn --chdir ~/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
+
 printf "\n\033[0;44m---> Starting the SSH server.\033[0m\n"
 
 /usr/sbin/sshd -D -f /opt/ssh/sshd_config

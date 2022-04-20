@@ -61,9 +61,6 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
 
-RUN . ~/.bashrc \
-    && gunicorn --chdir ${homedir}/${user}/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
-
 # RUN . ~/.bashrc \
 #     && python cli.py --input-file example_text.txt
 
