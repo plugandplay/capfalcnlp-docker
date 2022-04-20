@@ -62,8 +62,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && pip install -r requirements.txt \
     && pip install -e .
 
-RUN . ~/.bashrc \ 
-    && python cli.py --input-file example_text.txt
+# RUN . ~/.bashrc \ 
+#     && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY resources/entrypoint /entrypoint
