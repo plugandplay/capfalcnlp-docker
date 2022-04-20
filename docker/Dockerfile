@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-ARG user=unapei-capfalcnlp
+ARG user=codatalab
 ARG password=test
 ARG homedir=/home
 
