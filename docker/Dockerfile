@@ -9,6 +9,7 @@ RUN apt-get update -qq \
         git \
         openssh-server \
         net-tools iputils-ping nano acl \
+        gunicorn \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/python3 /usr/bin/python \
@@ -40,7 +41,7 @@ WORKDIR ${homedir}/${user}
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
 # TMP fix processing.py waiting for the issue to be solved by this MR : 
-RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox \
+RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox-server \
     && rm -rf capfalcnlp/.git* \
     && conda init bash \
     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
@@ -52,9 +53,18 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
+    && pip install flask \
+    && python -m nltk.downloader punkt \
+    && python -m spacy download en_core_web_md \
     && python -m spacy download fr_core_news_md
 
-RUN . ~/.bashrc \ 
+ENV FLASK_APP=toolbox
+ENV FLASK_ENV=production
+
+RUN . ~/.bashrc \
+    && gunicorn --chdir ${homedir}/${user}/capfalcnlp -w 2 --threads 2 --daemon toolbox:app
+
+RUN . ~/.bashrc \
     && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
