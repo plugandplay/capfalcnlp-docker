@@ -59,7 +59,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && . ~/.bashrc \
     && pip install -U pip setuptools wheel \
     && pip install -U 'spacy[cuda113]' \
-    && python -m spacy download en_core_news_md \
+    && python -m spacy download en_core_web_md \
     && python -m spacy download fr_core_news_md \
     && python -m spacy download es_core_news_md \
     && python -m spacy download it_core_news_sm \
