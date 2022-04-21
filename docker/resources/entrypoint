@@ -7,6 +7,10 @@ conda activate capfalcnlp
 gunicorn --config ~/gunicorn.conf.py toolbox:app
 
 
+printf "\n\033[0;44m---> First request to load the models.\033[0m\n"
+python cli.py --input-file example_text.txt
+
+
 printf "\n\033[0;44m---> Starting the SSH server.\033[0m\n"
 
 /usr/sbin/sshd -D -f /opt/ssh/sshd_config
