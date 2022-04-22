@@ -11,6 +11,7 @@ RUN apt update \
     && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
 
 WORKDIR /${homedir}/${user}
+USER ${user}
 
 RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
     && gunzip cc.fr.300.vec.gz \
