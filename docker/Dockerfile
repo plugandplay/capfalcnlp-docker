@@ -13,10 +13,10 @@ RUN apt-get update -qq \
 WORKDIR ${homedir}/${user}
 USER ${user}
 
-RUN wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
+RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
 RUN gzip -d cc.fr.300.vec.gz
-RUN wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
-RUN gzip -d cc.fr.300.vec.gz
+RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
+RUN gzip -d cc.en.300.vec.gz
 RUN rm *.gz
 RUN pip install --no-cache-dir spacy
 RUN python -m spacy download en_core_web_md
