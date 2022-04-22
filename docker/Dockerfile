@@ -17,7 +17,7 @@ RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.
 RUN gzip -d cc.fr.300.vec.gz
 RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
 RUN gzip -d cc.en.300.vec.gz
-RUN rm *.gz
+RUN rm cc.fr.300.vec.gz cc.en.300.vec.gz
 RUN pip install --no-cache-dir spacy
 RUN python -m spacy download en_core_web_md
 RUN python -m spacy download fr_core_news_md
