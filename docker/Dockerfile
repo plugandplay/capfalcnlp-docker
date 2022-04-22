@@ -8,7 +8,7 @@ RUN apt-get update -qq \
     && apt-get install -yqq --no-install-recommends wget gzip \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
+    && useradd --create-home --shell /bin/bash ${user}
 
 WORKDIR ${homedir}/${user}
 USER ${user}
