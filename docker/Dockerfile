@@ -4,7 +4,11 @@ ARG user=codatalab
 ARG password=test
 ARG homedir=/home
 
-RUN useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
+RUN apt update \
+    && apt install --no-install-recommends --yes wget \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
 
 WORKDIR /${homedir}/${user}
 
