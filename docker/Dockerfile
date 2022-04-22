@@ -4,8 +4,8 @@ ARG user=codatalab
 ARG password=test
 ARG homedir=/home
 
-RUN apt update \
-    && apt install --no-install-recommends --yes wget \
+RUN apt-get update -qq \
+    && apt-get install -yqq --no-install-recommends wget \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
@@ -13,7 +13,9 @@ RUN apt update \
 WORKDIR /${homedir}/${user}
 USER ${user}
 
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
+RUN pwd \
+    && ls -al \
+    && wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
     && gunzip cc.fr.300.vec.gz \
     && wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz \
     && gunzip cc.fr.300.vec.gz \
