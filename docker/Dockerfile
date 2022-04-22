@@ -5,7 +5,7 @@ ARG password=test
 ARG homedir=/home
 
 RUN apt-get update -qq \
-    && apt-get install -yqq --no-install-recommends wget \
+    && apt-get install -yqq --no-install-recommends wget gzip \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
@@ -13,10 +13,10 @@ RUN apt-get update -qq \
 WORKDIR ${homedir}/${user}
 USER ${user}
 
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
-RUN gunzip cc.fr.300.vec.gz
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
-RUN gunzip cc.fr.300.vec.gz
+RUN wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
+RUN gzip -d cc.fr.300.vec.gz
+RUN wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
+RUN gzip -d cc.fr.300.vec.gz
 RUN rm *.gz
 RUN pip install --no-cache-dir spacy
 RUN python -m spacy download en_core_web_md
