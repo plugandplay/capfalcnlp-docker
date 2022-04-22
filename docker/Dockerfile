@@ -12,9 +12,9 @@ RUN apt update \
 
 WORKDIR /${homedir}/${user}
 
-RUN wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
+RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
     && gunzip cc.fr.300.vec.gz \
-    && wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz \
+    && wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz \
     && gunzip cc.fr.300.vec.gz \
     && rm *.gz \
     && pip install --no-cache-dir spacy \
@@ -77,8 +77,9 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && . ~/.bashrc \
     && pip install -r requirements.txt \
     && pip install -e . \
-    && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/ \
-    && python -c "from capfalcnlp.helpers import load_model; load_model()"
+    && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
+    #  \
+    # && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 
 COPY --from=builder ${homedir}/${user}/cc.fr.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.fr.300.vec
