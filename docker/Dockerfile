@@ -10,7 +10,7 @@ RUN apt-get update -qq \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user}
 
-WORKDIR /${homedir}/${user}
+WORKDIR ${homedir}/${user}
 USER ${user}
 
 RUN pwd \
