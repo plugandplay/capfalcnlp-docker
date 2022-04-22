@@ -13,13 +13,13 @@ RUN apt-get update -qq \
 WORKDIR ${homedir}/${user}
 USER ${user}
 
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
-RUN gzip -d cc.fr.300.vec.gz
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
-RUN gzip -d cc.en.300.vec.gz
-RUN pip install --no-cache-dir spacy
-RUN python -m spacy download en_core_web_md
-RUN python -m spacy download fr_core_news_md
+RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
+    && gzip -d cc.fr.300.vec.gz \
+    && wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz \
+    && gzip -d cc.en.300.vec.gz \
+    && pip install --no-cache-dir 'spacy<3' \
+    && python -m spacy download en_core_web_md \
+    && python -m spacy download fr_core_news_md
 
 
 
@@ -84,7 +84,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
 
 COPY --from=builder ${homedir}/${user}/cc.fr.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.fr.300.vec
 COPY --from=builder ${homedir}/${user}/cc.en.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.en.300.vec
-COPY --from=builder ${homedir}/${user}/.local/lib/python3.7/site-packages ${homedir}/${user}/lib/python3.7/site-packages
+COPY --from=builder ${homedir}/${user}/.local/lib/python3.7/site-packages/fr_core_news_md* ${homedir}/${user}/lib/python3.7/site-packages/
+COPY --from=builder ${homedir}/${user}/.local/lib/python3.7/site-packages/en_core_web_md* ${homedir}/${user}/lib/python3.7/site-packages/
 
 
 ENV FLASK_APP=toolbox
