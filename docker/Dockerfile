@@ -84,8 +84,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
 
 COPY --from=builder ${homedir}/${user}/cc.fr.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.fr.300.vec
 COPY --from=builder ${homedir}/${user}/cc.en.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.en.300.vec
-COPY --from=builder ${homedir}/${user}/.local/lib/python3.7/site-packages/fr_core_news_md* ${homedir}/${user}/.local/lib/python3.7/site-packages/
-COPY --from=builder ${homedir}/${user}/.local/lib/python3.7/site-packages/en_core_web_md* ${homedir}/${user}/.local/lib/python3.7/site-packages/
+COPY --from=builder ${homedir}/${user}/.local ${homedir}/${user}/.local
 
 
 ENV FLASK_APP=toolbox
