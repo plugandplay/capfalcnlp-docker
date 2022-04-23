@@ -78,20 +78,18 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && pip install -r requirements.txt \
     && pip install -e . \
     && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
-    #  \
-    # && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 
 COPY --from=builder ${homedir}/${user}/cc.fr.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.fr.300.vec
 COPY --from=builder ${homedir}/${user}/cc.en.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.en.300.vec
 COPY --from=builder ${homedir}/${user}/.local ${homedir}/${user}/.local
 
+RUN . ~/.bashrc \
+    && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
 
-# RUN . ~/.bashrc \
-#     && python cli.py --input-file example_text.txt
 
 EXPOSE 2222
 COPY --chown=${user} resources/gunicorn.conf.py /home/${user}
