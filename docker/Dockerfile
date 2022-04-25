@@ -54,8 +54,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && pip install -e . \
     && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
 
-RUN . ~/.bashrc \
-    && python -c "from capfalcnlp.helpers import load_model; load_model()"
+# RUN . ~/.bashrc \
+#     && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
