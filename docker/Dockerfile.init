@@ -1,0 +1,33 @@
+FROM python:3.7-slim
+
+ARG user=codatalab
+ARG homedir=/home
+
+RUN apt-get update -qq \
+    && apt-get install -yqq --no-install-recommends wget gzip \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    \
+    && useradd --create-home --shell /bin/bash ${user} \
+    && mkdir -p ${homedir}/${user}/.ssh \
+    && chmod 0700 ${homedir}/${user}/.ssh \
+    && chown -R ${user}:${user} ${homedir}/${user} \
+    \
+    && mkdir -p /opt/ssh \
+    && /usr/bin/ssh-keygen -A \
+    && cp /etc/ssh/ssh_host_* /opt/ssh/ \
+    && cp /etc/ssh/sshd_config /opt/ssh/ \
+    && sed -i -E 's:#?HostKey /etc:HostKey /opt:' /opt/ssh/sshd_config \
+    && sed -i -E 's/#?PasswordAuthentication yes/PasswordAuthentication yes/' /opt/ssh/sshd_config \
+    && echo 'Port 2222' >> /opt/ssh/sshd_config \
+    && chmod 700 /opt/ssh \
+    && chmod 600 /opt/ssh/* \
+    && chown -R ${user}:${user} /opt/ssh
+    
+
+WORKDIR ${homedir}/${user}
+USER ${user}
+
+COPY init-resources/entrypoint /entrypoint
+ENTRYPOINT [ "/entrypoint" ]
+CMD tail -f /dev/null
