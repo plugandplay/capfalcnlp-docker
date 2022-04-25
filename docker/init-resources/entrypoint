@@ -1,6 +1,8 @@
 #!/bin/bash
 
-printf "\n\033[0;44m---> Downloading models...\033[0m\n"
+printf "\n\033[0;44m---> Downloading models for %s in %s...\033[0m\n" "$(whoami)" "$(pwd)"
+
+ls -al
 
 if [[ $(ls ~/capfalcnlp/resources/models/fasttext-vectors | wc -l) != 2 ]]; then
     mkdir -p ~/capfalcnlp/resources/models/fasttext-vectors/
