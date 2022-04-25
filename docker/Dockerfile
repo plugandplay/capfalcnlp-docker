@@ -46,8 +46,8 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b ${b
     && pip install -r requirements.txt \
     && pip install -e .
 
-RUN . ~/.bashrc \
-    && python -c "from capfalcnlp.helpers import load_model; load_model()"
+# RUN . ~/.bashrc \
+#     && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
