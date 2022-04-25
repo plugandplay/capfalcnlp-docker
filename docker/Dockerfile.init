@@ -4,7 +4,9 @@ ARG user=codatalab
 ARG homedir=/home
 
 RUN apt-get update -qq \
-    && apt-get install -yqq --no-install-recommends wget gzip \
+    && apt-get install -yqq --no-install-recommends \
+        openssh-server \
+        wget gzip \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     \
