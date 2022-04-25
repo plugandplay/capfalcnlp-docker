@@ -6,15 +6,21 @@ ls -al
 
 grep "${USER}" /etc/passwd
 
+mkdir -p ~/capfalcnlp/resources/models/fasttext-vectors/
+cd "$_" || exit
 if [[ $(ls ~/capfalcnlp/resources/models/fasttext-vectors | wc -l) != 2 ]]; then
-    mkdir -p ~/capfalcnlp/resources/models/fasttext-vectors/
-    cd "$_" || return
     wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
     gzip -d cc.fr.300.vec.gz
     wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz
     gzip -d cc.en.300.vec.gz
-    cd ~/capfalcnlp || return
-    pip install --no-cache-dir 'spacy<3'
-    python -m spacy download en_core_web_md
-    python -m spacy download fr_core_news_md
+    cd ~/capfalcnlp || exit  
 fi
+
+#pip install --no-cache-dir 'spacy<3'
+# python -m spacy download en_core_web_md
+# python -m spacy download fr_core_news_md
+
+wget -q https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.3.1/en_core_web_md-2.3.1.tar.gz
+pip install en_core_web_md-2.3.1.tar.gz
+wget -q https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-2.3.0/fr_core_news_md-2.3.0.tar.gz
+pip install fr_core_news_md-2.3.0.tar.gz
