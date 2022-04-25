@@ -2,8 +2,8 @@
 
 printf "\n\033[0;44m---> Downloading models...\033[0m\n"
 
-mkdir -p ~/capfalcnlp/resources/models/fasttext-vectors/
 if [[ $(ls ~/capfalcnlp/resources/models/fasttext-vectors | wc -l) != 2 ]]; then
+    mkdir -p ~/capfalcnlp/resources/models/fasttext-vectors/
     cd "$_" || return
     wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz
     gzip -d cc.fr.300.vec.gz
