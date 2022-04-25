@@ -16,7 +16,7 @@ RUN apt-get update -qq \
     && if [[ $(conda env list | grep 'capfalcnlp' | wc -l) = 0 ]]; then conda create -n capfalcnlp python=3.7 gunicorn -y; fi \
     \
     && if [ $(grep ${user} /etc/passwd | wc -l) = 0 ]; then \
-         useradd --create-home --shell /bin/bash ${user} \
+         useradd --create-home --shell /bin/bash --uid 2001 ${user} \
          && mkdir -p ${homedir}/${user}/.ssh \
          && chmod 0700 ${homedir}/${user}/.ssh \
          && chown -R ${user}:${user} ${homedir}/${user}; \

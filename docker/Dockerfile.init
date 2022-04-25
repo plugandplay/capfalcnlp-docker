@@ -10,7 +10,7 @@ RUN apt-get update -qq \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     \
-    && useradd --create-home --shell /bin/bash ${user} \
+    && useradd --create-home --shell /bin/bash --uid 2001  ${user} \
     && mkdir -p ${homedir}/${user}/.ssh \
     && chmod 0700 ${homedir}/${user}/.ssh \
     && chown -R ${user}:${user} ${homedir}/${user} \
