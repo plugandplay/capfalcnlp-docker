@@ -16,11 +16,11 @@ RUN apt-get update -qq \
     && if [[ $(conda env list | grep 'capfalcnlp' | wc -l) = 0 ]]; then conda create -n capfalcnlp python=3.7 gunicorn -y; fi \
     \
     && if [ $(grep ${user} /etc/passwd | wc -l) = 0 ]; then \
-        useradd --create-home --shell /bin/bash ${user} \
-        && mkdir -p ${homedir}/${user}/.ssh \
-        && chmod 0700 ${homedir}/${user}/.ssh \
-        && chown -R ${user}:${user} ${homedir}/${user} \
-    && fi \
+         useradd --create-home --shell /bin/bash ${user} \
+         && mkdir -p ${homedir}/${user}/.ssh \
+         && chmod 0700 ${homedir}/${user}/.ssh \
+         && chown -R ${user}:${user} ${homedir}/${user} \
+       fi \
     && echo "${user}:${password}" | chpasswd \
     \
     && mkdir /run/sshd
