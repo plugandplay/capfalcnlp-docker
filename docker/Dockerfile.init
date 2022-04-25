@@ -32,4 +32,3 @@ USER ${user}
 
 COPY init-resources/entrypoint /entrypoint
 ENTRYPOINT [ "/entrypoint" ]
-CMD tail -f /dev/null

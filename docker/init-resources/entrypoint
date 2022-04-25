@@ -14,5 +14,3 @@ if [[ $(ls ~/capfalcnlp/resources/models/fasttext-vectors | wc -l) != 2 ]]; then
     python -m spacy download en_core_web_md
     python -m spacy download fr_core_news_md
 fi
-
-exec "$@"
