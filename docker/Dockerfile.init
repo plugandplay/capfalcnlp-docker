@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM continuumio/miniconda3
 
 ARG user=codatalab
 ARG homedir=/home
