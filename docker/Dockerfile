@@ -15,7 +15,7 @@ RUN apt-get update -qq \
     && conda create -n capfalcnlp python=3.7 gunicorn -y \
     \
     && mkdir -p ${homedir}/${user}/.ssh \
-    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user} --no-log-init \
+    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash --uid 2001 ${user} --no-log-init \
     && chmod 0700 ${homedir}/${user}/.ssh \
     && chown -R ${user}:${user} ${homedir}/${user} \
     && echo "${user}:${password}" | chpasswd \
