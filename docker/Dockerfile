@@ -19,7 +19,7 @@ RUN apt-get update -qq \
          useradd --create-home --shell /bin/bash ${user} \
          && mkdir -p ${homedir}/${user}/.ssh \
          && chmod 0700 ${homedir}/${user}/.ssh \
-         && chown -R ${user}:${user} ${homedir}/${user} \
+         && chown -R ${user}:${user} ${homedir}/${user}; \
        fi \
     && echo "${user}:${password}" | chpasswd \
     \
