@@ -5,6 +5,7 @@ printf "\n\033[0;44m---> Starting the gunicorn server.\033[0m\n"
 eval "$(conda shell.bash hook)"
 conda activate capfalcnlp
 
+cd ~/capfalcnlp
 pip install -r requirements.txt
 pip install -e .
 

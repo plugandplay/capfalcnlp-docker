@@ -48,11 +48,7 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && echo 'cd capfalcnlp' >> ~/.bashrc \
     && echo 'if [ -f ~/.bashrc ]; then' >> ~/.bash_profile \
     && echo '  . ~/.bashrc' >> ~/.bash_profile \
-    && echo 'fi' >> ~/.bash_profile \
-    && . ~/.bashrc \
-    && pip install -r requirements.txt \
-    && pip install -e . \
-    && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
+    && echo 'fi' >> ~/.bash_profile
 
 # RUN . ~/.bashrc \
 #     && python -c "from capfalcnlp.helpers import load_model; load_model()"
