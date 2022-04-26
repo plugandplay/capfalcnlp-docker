@@ -37,3 +37,4 @@ jobs:
         build-args: |
           user=${{ secrets.USER_NAME }}
           password=${{ secrets.USER_PASSWORD }}
+          branch=${{ secrets.BRANCH }}

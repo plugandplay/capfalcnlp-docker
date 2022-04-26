@@ -1,28 +1,3 @@
-FROM python:3.7-slim AS builder
-
-ARG user=codatalab
-ARG password=test
-ARG homedir=/home
-
-RUN apt-get update -qq \
-    && apt-get install -yqq --no-install-recommends wget gzip \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && useradd --create-home --shell /bin/bash ${user}
-
-WORKDIR ${homedir}/${user}
-USER ${user}
-
-RUN wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz \
-    && gzip -d cc.fr.300.vec.gz \
-    && wget -q https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.vec.gz \
-    && gzip -d cc.en.300.vec.gz \
-    && pip install --no-cache-dir 'spacy<3' \
-    && python -m spacy download en_core_web_md \
-    && python -m spacy download fr_core_news_md
-
-
-
 FROM continuumio/miniconda3
 
 ARG user=codatalab
@@ -40,7 +15,7 @@ RUN apt-get update -qq \
     && conda create -n capfalcnlp python=3.7 gunicorn -y \
     \
     && mkdir -p ${homedir}/${user}/.ssh \
-    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash ${user} --no-log-init \
+    && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash --uid 2001 ${user} --no-log-init \
     && chmod 0700 ${homedir}/${user}/.ssh \
     && chown -R ${user}:${user} ${homedir}/${user} \
     && echo "${user}:${password}" | chpasswd \
@@ -55,7 +30,8 @@ RUN apt-get update -qq \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
     && chown -R ${user}:${user} /opt/ssh \
-    && mkdir /run/sshd
+    && mkdir /run/sshd \
+    && mkdir -p ${homedir}/${user}/input-files
 
 RUN rm -rf /run/nologin
 
@@ -73,26 +49,13 @@ RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b una
     && echo 'cd capfalcnlp' >> ~/.bashrc \
     && echo 'if [ -f ~/.bashrc ]; then' >> ~/.bash_profile \
     && echo '  . ~/.bashrc' >> ~/.bash_profile \
-    && echo 'fi' >> ~/.bash_profile \
-    && . ~/.bashrc \
-    && pip install -r requirements.txt \
-    && pip install -e . \
-    && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
-
-
-COPY --from=builder ${homedir}/${user}/cc.fr.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.fr.300.vec
-COPY --from=builder ${homedir}/${user}/cc.en.300.vec ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/cc.en.300.vec
-COPY --from=builder ${homedir}/${user}/.local ${homedir}/${user}/.local
-
-RUN . ~/.bashrc \
-    && python -c "from capfalcnlp.helpers import load_model; load_model()"
+    && echo 'fi' >> ~/.bash_profile
 
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
 
-
 EXPOSE 2222
-COPY --chown=${user} resources/gunicorn.conf.py /home/${user}
+COPY --chown=${user} resources/gunicorn.conf.py /usr/local/etc/
 COPY resources/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD tail -f /dev/null
