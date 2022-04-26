@@ -38,17 +38,3 @@ jobs:
           user=${{ secrets.USER_NAME }}
           password=${{ secrets.USER_PASSWORD }}
           branch=${{ secrets.BRANCH }}
-    
-    - name: Build and push initContainer
-      uses: docker/build-push-action@v2
-      with:
-        context: ./docker
-        file: ./docker/Dockerfile.init
-        builder: ${{ steps.buildx.outputs.name }}
-        push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/codatalab-capfalcnlp-init:latest
-        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/codatalab-capfalcnlp-init:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/codatalab-capfalcnlp-init:buildcache,mode=max
-        build-args: |
-          user=${{ secrets.USER_NAME }}
-          password=${{ secrets.USER_PASSWORD }}
