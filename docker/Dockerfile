@@ -30,7 +30,8 @@ RUN apt-get update -qq \
     && chmod 700 /opt/ssh \
     && chmod 600 /opt/ssh/* \
     && chown -R ${user}:${user} /opt/ssh \
-    && mkdir /run/sshd
+    && mkdir /run/sshd \
+    && mkdir -p ${homedir}/${user}/input-files
 
 RUN rm -rf /run/nologin
 
