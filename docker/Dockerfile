@@ -3,6 +3,7 @@ FROM continuumio/miniconda3
 ARG user=codatalab
 ARG password=test
 ARG homedir=/home
+ARG branch=unapei-toolbox-server
 
 RUN apt-get update -qq \
     && apt-get install -yqq --no-install-recommends \
@@ -41,7 +42,7 @@ WORKDIR ${homedir}/${user}
 
 # FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
 # TMP fix processing.py waiting for the issue to be solved by this MR : 
-RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox-server \
+RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b ${branch} \
     && rm -rf capfalcnlp/.git* \
     && conda init bash \
     && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
