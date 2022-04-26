@@ -1,33 +1,5 @@
 #!/bin/bash
 
-printf "\n\033[0;44m---> Project installation...\033[0m\n"
-# FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
-# TMP fix processing.py waiting for the issue to be solved by this MR : 
-mkdir -p capfalcnlp
-cd capfalcnlp || exit
-git init
-echo * > .gitignore
-git add .
-git commit -m 'Initial commit'
-git remote add origin https://github.com/cleyrop/capfalcnlp.git
-git fetch origin unapei-toolbox-server
-git switch unapei-toolbox-server
-rm -rf capfalcnlp/.git*
-conda init bash
-if [[ $(grep '# codatalab' ~/.bashrc | wc -l) = 0 ]]; then
-    sed -i '/# If not running interactively/,+5d' ~/.bashrc
-    echo '# codatalab' >> ~/.bashrc
-    echo 'conda activate capfalcnlp' >> ~/.bashrc
-    echo 'cd capfalcnlp' >> ~/.bashrc
-    echo 'if [ -f ~/.bashrc ]; then' >> ~/.bash_profile
-    echo '  . ~/.bashrc' >> ~/.bash_profile
-    echo 'fi' >> ~/.bash_profile
-fi
-. ~/.bashrc
-pip install -r requirements.txt
-pip install -e .
-
-
 printf "\n\033[0;44m---> Starting the gunicorn server.\033[0m\n"
 
 eval "$(conda shell.bash hook)"

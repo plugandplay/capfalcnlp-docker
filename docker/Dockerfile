@@ -14,10 +14,10 @@ RUN apt-get update -qq \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && conda create -n capfalcnlp python=3.7 gunicorn -y \
     \
-    # && mkdir -p ${homedir}/${user}/.ssh \
+    && mkdir -p ${homedir}/${user}/.ssh \
     && useradd --home ${homedir}/${user} --no-create-home --shell /bin/bash --uid 2001 ${user} --no-log-init \
-    # && chmod 0700 ${homedir}/${user}/.ssh \
-    # && chown -R ${user}:${user} ${homedir}/${user} \
+    && chmod 0700 ${homedir}/${user}/.ssh \
+    && chown -R ${user}:${user} ${homedir}/${user} \
     && echo "${user}:${password}" | chpasswd \
     \
     && mkdir /opt/ssh \
@@ -36,6 +36,26 @@ RUN rm -rf /run/nologin
 
 USER ${user}
 WORKDIR ${homedir}/${user}
+
+
+# FIXED bashrc skipping if ran non interactively causing conda ativate to fail 
+# TMP fix processing.py waiting for the issue to be solved by this MR : 
+RUN git clone --quiet --depth 1 https://github.com/cleyrop/capfalcnlp.git -b unapei-toolbox-server \
+    && rm -rf capfalcnlp/.git* \
+    && conda init bash \
+    && sed -i '/# If not running interactively/,+5d' ~/.bashrc \
+    && echo 'conda activate capfalcnlp' >> ~/.bashrc \
+    && echo 'cd capfalcnlp' >> ~/.bashrc \
+    && echo 'if [ -f ~/.bashrc ]; then' >> ~/.bash_profile \
+    && echo '  . ~/.bashrc' >> ~/.bash_profile \
+    && echo 'fi' >> ~/.bash_profile \
+    && . ~/.bashrc \
+    && pip install -r requirements.txt \
+    && pip install -e . \
+    && mkdir -p ${homedir}/${user}/capfalcnlp/resources/models/fasttext-vectors/
+
+# RUN . ~/.bashrc \
+#     && python -c "from capfalcnlp.helpers import load_model; load_model()"
 
 ENV FLASK_APP=toolbox
 ENV FLASK_ENV=production
